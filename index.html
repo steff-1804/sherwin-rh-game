@@ -7,262 +7,62 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="app">
-    <section id="screenStart" class="screen active">
-      <div class="hero">
-        <div class="badge">EHS · Riesgos Psicosociales</div>
-        <h1>Detecta el Riesgo</h1>
-        <p>
-          Lee cada situación y decide si corresponde a un riesgo psicosocial o si es una acción normal de gestión laboral.
-        </p>
+  <main class="game-shell">
+    <section class="header">
+      <div class="logo-badge">EHS</div>
+      <div>
+        <h1>Riesgos Psicosociales</h1>
+        <p>Identifica si la situación representa un riesgo real o si puede ser una gestión normal del trabajo.</p>
       </div>
+    </section>
 
-      <section class="settings">
-        <div class="field">
-          <label for="dimensionSelect">Tema</label>
-          <select id="dimensionSelect">
+    <section id="startScreen" class="card">
+      <h2>Configurar juego</h2>
+      <div class="config">
+        <label>
+          Tema
+          <select id="topicSelect">
             <option value="TODOS">Todos los temas</option>
           </select>
-        </div>
-
-        <div class="field">
-          <label for="questionCount">Cantidad de preguntas</label>
-          <select id="questionCount">
-            <option value="5">5 preguntas</option>
-            <option value="10" selected>10 preguntas</option>
-            <option value="15">15 preguntas</option>
+        </label>
+        <label>
+          Preguntas
+          <select id="amountSelect">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
             <option value="999">Todas</option>
           </select>
-        </div>
-
-        <button id="btnStart" class="primary">Iniciar juego</button>
-      </section>
-
-      <section class="info-grid">
-        <article>
-          <strong>Riesgo psicosocial</strong>
-          <span>Situación que puede afectar bienestar, salud mental, relaciones o carga laboral.</span>
-        </article>
-        <article>
-          <strong>No necesariamente riesgo</strong>
-          <span>Acción de control, seguimiento o gestión laboral normal si se realiza con respeto y claridad.</span>
-        </article>
-      </section>
-    </section>
-
-    <section id="screenGame" class="screen">
-      <header class="topbar">
-        <div>
-          <span class="label">Tema</span>
-          <strong id="currentDimension">-</strong>
-        </div>
-        <div>
-          <span class="label">Pregunta</span>
-          <strong><span id="currentIndex">1</span>/<span id="totalQuestions">1</span></strong>
-        </div>
-        <div>
-          <span class="label">Puntaje</span>
-          <strong><span id="score">0</span></strong>
-        </div>
-      </header>
-
-      <div class="progress"><div id="progressBar"></div></div>
-
-      <section class="card">
-        <span id="dimensionChip" class="chip">Dimensión</span>
-        <h2 id="caseText">Caso</h2>
-
-        <div class="answers">
-          <button id="btnRisk" class="answer risk">Sí es riesgo psicosocial</button>
-          <button id="btnNoRisk" class="answer no-risk">No es riesgo / gestión normal</button>
-        </div>
-
-        <div id="feedback" class="feedback hidden"></div>
-
-        <button id="btnNext" class="primary hidden">Siguiente</button>
-      </section>
-    </section>
-
-    <section id="screenResult" class="screen">
-      <div class="result-card">
-        <div class="badge">Resultado final</div>
-        <h1 id="finalTitle">Resultado</h1>
-        <p id="finalScore">0/0</p>
-        <div id="finalMessage" class="final-message"></div>
-
-        <div class="result-actions">
-          <button id="btnReview" class="secondary">Ver respuestas</button>
-          <button id="btnRestart" class="primary">Jugar otra vez</button>
-        </div>
+        </label>
+        <button id="startBtn">Iniciar</button>
       </div>
+    </section>
 
-      <section id="reviewPanel" class="review hidden">
-        <h2>Revisión de respuestas</h2>
-        <div id="reviewList"></div>
-      </section>
+    <section id="gameScreen" class="card hidden">
+      <div class="hud">
+        <span id="topicChip">Tema</span>
+        <span>Pregunta <b id="counter">1/1</b></span>
+        <span>Puntos <b id="score">0</b></span>
+      </div>
+      <div class="bar"><div id="progress"></div></div>
+      <h2 id="questionText"></h2>
+      <div class="options">
+        <button id="riskBtn" class="risk">Sí es riesgo</button>
+        <button id="notRiskBtn" class="not-risk">No es riesgo / gestión normal</button>
+      </div>
+      <div id="feedback" class="feedback hidden"></div>
+      <button id="nextBtn" class="next hidden">Siguiente</button>
+    </section>
+
+    <section id="resultScreen" class="card hidden">
+      <h2 id="resultTitle">Resultado</h2>
+      <p id="resultScore" class="big-score"></p>
+      <p id="resultMessage"></p>
+      <button id="restartBtn">Volver a jugar</button>
+      <button id="reviewBtn" class="secondary">Ver revisión</button>
+      <div id="review" class="review hidden"></div>
     </section>
   </main>
 
-  <script>
-    const QUESTIONS = [
-  {
-    "dimension": "Liderazgo",
-    "case": "El jefe evita dar retroalimentación negativa para no incomodar.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Liderazgo",
-    "case": "El líder toma decisiones sin consultar al equipo para ganar tiempo.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Liderazgo",
-    "case": "El jefe felicita solo a un colaborador constantemente ignorando al resto.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Liderazgo",
-    "case": "El supervisor asigna tareas sin explicar objetivos.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Liderazgo",
-    "case": "El gerente reconoce públicamente el esfuerzo del equipo.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Liderazgo",
-    "case": "El lider recuerda las actividades a realizar en la semana y se brinda acompañamiento",
-    "isRisk": false
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "Se pide quedarse horas extra para cumplir metas.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "Un trabajador revisa correos en la noche por presión implícita.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "Se asignan tareas adicionales al personal en base a una medicion de tiempos.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "Existen pausas activas durante la jornada laboral.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "Se exige cumplir tareas urgentes simultáneamente todos los días.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "El supervisor controla el horario de ingreso y salida.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "El supervisor solicita que se cumpla con los programas establecidos.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Carga y ritmo",
-    "case": "El supervisor me coloca en 1er turno cuando siempre he estado en el 2do",
-    "isRisk": false
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Un compañero hace bromas constantes sobre otro frente al equipo.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Se excluye a ciertos trabajadores de reuniones",
-    "isRisk": true
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Un colaborador recibe retroalimentación sobre procesos",
-    "isRisk": false
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Se ignoran repetidamente las opiniones de una persona.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Un supervisor brinda retroalimentacion de manera seguida",
-    "isRisk": false
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "El supervisor controla el horario de ingreso y salida.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "El lider realiza seguimiento de avances del trabajo diario del personal",
-    "isRisk": false
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Tengo una urgencia medica personal y mi jefe me solicita quedarme laborando",
-    "isRisk": true
-  },
-  {
-    "dimension": "Acoso laboral",
-    "case": "Mis compañeros siempre estan pendientes que utilice correctamnete los EPP",
-    "isRisk": false
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Mi jefe no me permite asistir a citas medicas",
-    "isRisk": true
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Empresa establece horarios en turnos rotativos",
-    "isRisk": false
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Se exige disponibilidad fuera del horario laboral.",
-    "isRisk": true
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Debo reportar si tengo que asusentarme por una cita medica",
-    "isRisk": false
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "La empresa respeta los tiempos personales.",
-    "isRisk": false
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Mi supervisor me solicita certificado medico por una cita medica que acudí",
-    "isRisk": false
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Cargo un dia de vacaciones para realizar tramites personales",
-    "isRisk": false
-  },
-  {
-    "dimension": "Doble presencia",
-    "case": "Cargo un dia de vacaciones para asistir a un evento familiar",
-    "isRisk": false
-  }
-];
-    const DIMENSIONS = ["Acoso laboral", "Carga y ritmo", "Doble presencia", "Liderazgo"];
-  </script>
   <script src="script.js"></script>
 </body>
 </html>
