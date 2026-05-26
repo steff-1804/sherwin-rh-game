@@ -1,68 +1,240 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Juego Riesgos Psicosociales</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego Sherwin Williams</title>
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#eef6ff,#ffffff);
+color:#08204a;
+}
+header{
+background:linear-gradient(90deg,#003b7a,#0057b8);
+color:white;
+padding:20px;
+text-align:center;
+}
+header h1{
+margin:0;
+font-size:38px;
+}
+.container{
+width:95%;
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+.hero{
+display:grid;
+grid-template-columns:250px 1fr;
+gap:20px;
+align-items:center;
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.1);
+margin-bottom:20px;
+}
+.hero img{
+width:100%;
+max-height:300px;
+object-fit:contain;
+}
+.select-area{
+display:grid;
+grid-template-columns:1fr auto;
+gap:10px;
+margin-bottom:20px;
+}
+select,button{
+padding:15px;
+border-radius:14px;
+border:none;
+font-size:16px;
+}
+button{
+background:#e31b23;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+.game{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-top:20px;
+}
+.zone{
+background:white;
+border-radius:20px;
+padding:20px;
+min-height:300px;
+box-shadow:0 10px 20px rgba(0,0,0,.08);
+}
+.zone h2{
+text-align:center;
+}
+.risk{
+border:3px solid #ff8b94;
+}
+.normal{
+border:3px solid #90ee90;
+}
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:12px;
+margin-top:20px;
+}
+.card{
+background:white;
+padding:15px;
+border-radius:14px;
+cursor:grab;
+border:1px solid #ddd;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+footer{
+margin-top:30px;
+background:#003b7a;
+color:white;
+padding:15px;
+text-align:center;
+font-weight:bold;
+}
+@media(max-width:900px){
+.hero,.game,.select-area{
+grid-template-columns:1fr;
+}
+}
+</style>
 </head>
 <body>
-  <main class="game-shell">
-    <section class="header">
-      <div class="logo-badge">EHS</div>
-      <div>
-        <h1>Riesgos Psicosociales</h1>
-        <p>Identifica si la situación representa un riesgo real o si puede ser una gestión normal del trabajo.</p>
-      </div>
-    </section>
 
-    <section id="startScreen" class="card">
-      <h2>Configurar juego</h2>
-      <div class="config">
-        <label>
-          Tema
-          <select id="topicSelect">
-            <option value="TODOS">Todos los temas</option>
-          </select>
-        </label>
-        <label>
-          Preguntas
-          <select id="amountSelect">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="999">Todas</option>
-          </select>
-        </label>
-        <button id="startBtn">Iniciar</button>
-      </div>
-    </section>
+<header>
+<h1>SHERWIN WILLIAMS</h1>
+<p>Departamento de Recursos Humanos</p>
+</header>
 
-    <section id="gameScreen" class="card hidden">
-      <div class="hud">
-        <span id="topicChip">Tema</span>
-        <span>Pregunta <b id="counter">1/1</b></span>
-        <span>Puntos <b id="score">0</b></span>
-      </div>
-      <div class="bar"><div id="progress"></div></div>
-      <h2 id="questionText"></h2>
-      <div class="options">
-        <button id="riskBtn" class="risk">Sí es riesgo</button>
-        <button id="notRiskBtn" class="not-risk">No es riesgo / gestión normal</button>
-      </div>
-      <div id="feedback" class="feedback hidden"></div>
-      <button id="nextBtn" class="next hidden">Siguiente</button>
-    </section>
+<div class="container">
 
-    <section id="resultScreen" class="card hidden">
-      <h2 id="resultTitle">Resultado</h2>
-      <p id="resultScore" class="big-score"></p>
-      <p id="resultMessage"></p>
-      <button id="restartBtn">Volver a jugar</button>
-      <button id="reviewBtn" class="secondary">Ver revisión</button>
-      <div id="review" class="review hidden"></div>
-    </section>
-  </main>
+<div class="hero">
+<img src="mascota.png" alt="Mascota">
+<div>
+<h2>Juego de Riesgos Psicosociales</h2>
+<p>Clasifica las situaciones entre riesgos reales y situaciones normales del trabajo.</p>
+</div>
+</div>
 
-  <script src="script.js"></script>
+<div class="select-area">
+<select id="tema">
+<option>Acoso laboral</option>
+<option>Estrés laboral</option>
+<option>Burnout</option>
+<option>Liderazgo tóxico</option>
+<option>Comunicación efectiva</option>
+</select>
+
+<button onclick="generar()">Generar opciones</button>
+</div>
+
+<div class="game">
+<div class="zone risk" id="riesgo">
+<h2>⚠️ Riesgo laboral</h2>
+</div>
+
+<div class="zone normal" id="normal">
+<h2>✅ Gajes del oficio</h2>
+</div>
+</div>
+
+<div class="cards" id="cards"></div>
+
+</div>
+
+<footer>
+Sherwin Williams · Recursos Humanos
+</footer>
+
+<script>
+
+const datos={
+"Acoso laboral":[
+["Tu jefe te humilla frente al equipo.","riesgo"],
+["Te piden corregir un informe.","normal"],
+["Difunden rumores falsos sobre ti.","riesgo"],
+["Te solicitan entregar una tarea urgente.","normal"]
+],
+
+"Estrés laboral":[
+["No tienes pausas ni descanso.","riesgo"],
+["Hay una semana con alta carga operativa.","normal"],
+["La presión es constante y afecta tu salud.","riesgo"],
+["Se reorganizan tareas por una auditoría.","normal"]
+],
+
+"Burnout":[
+["Trabajas jornadas excesivas todos los días.","riesgo"],
+["Hay cansancio después de una semana intensa.","normal"],
+["Pierdes motivación por agotamiento continuo.","riesgo"],
+["Te asignan una tarea retadora.","normal"]
+],
+
+"Liderazgo tóxico":[
+["Tu líder amenaza constantemente.","riesgo"],
+["Tu líder da seguimiento a indicadores.","normal"],
+["Se ridiculiza públicamente al personal.","riesgo"],
+["Se corrige una conducta insegura.","normal"]
+],
+
+"Comunicación efectiva":[
+["Ocultan información para que falles.","riesgo"],
+["Te piden confirmar instrucciones.","normal"],
+["Usan insultos para comunicar errores.","riesgo"],
+["Se aclaran dudas en reuniones.","normal"]
+]
+};
+
+let dragged=null;
+
+function generar(){
+const tema=document.getElementById("tema").value;
+const area=document.getElementById("cards");
+area.innerHTML="";
+
+datos[tema].forEach((item,index)=>{
+const card=document.createElement("div");
+card.className="card";
+card.draggable=true;
+card.innerText=item[0];
+card.dataset.tipo=item[1];
+
+card.addEventListener("dragstart",()=>{
+dragged=card;
+});
+
+area.appendChild(card);
+});
+}
+
+document.querySelectorAll(".zone").forEach(zone=>{
+zone.addEventListener("dragover",e=>{
+e.preventDefault();
+});
+
+zone.addEventListener("drop",()=>{
+if(dragged){
+zone.appendChild(dragged);
+}
+});
+});
+
+generar();
+
+</script>
+
 </body>
 </html>
