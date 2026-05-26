@@ -1,240 +1,1110 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juego Sherwin Williams</title>
-<style>
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#eef6ff,#ffffff);
-color:#08204a;
-}
-header{
-background:linear-gradient(90deg,#003b7a,#0057b8);
-color:white;
-padding:20px;
-text-align:center;
-}
-header h1{
-margin:0;
-font-size:38px;
-}
-.container{
-width:95%;
-max-width:1200px;
-margin:auto;
-padding:20px;
-}
-.hero{
-display:grid;
-grid-template-columns:250px 1fr;
-gap:20px;
-align-items:center;
-background:white;
-padding:20px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.1);
-margin-bottom:20px;
-}
-.hero img{
-width:100%;
-max-height:300px;
-object-fit:contain;
-}
-.select-area{
-display:grid;
-grid-template-columns:1fr auto;
-gap:10px;
-margin-bottom:20px;
-}
-select,button{
-padding:15px;
-border-radius:14px;
-border:none;
-font-size:16px;
-}
-button{
-background:#e31b23;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-.game{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-margin-top:20px;
-}
-.zone{
-background:white;
-border-radius:20px;
-padding:20px;
-min-height:300px;
-box-shadow:0 10px 20px rgba(0,0,0,.08);
-}
-.zone h2{
-text-align:center;
-}
-.risk{
-border:3px solid #ff8b94;
-}
-.normal{
-border:3px solid #90ee90;
-}
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:12px;
-margin-top:20px;
-}
-.card{
-background:white;
-padding:15px;
-border-radius:14px;
-cursor:grab;
-border:1px solid #ddd;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
-footer{
-margin-top:30px;
-background:#003b7a;
-color:white;
-padding:15px;
-text-align:center;
-font-weight:bold;
-}
-@media(max-width:900px){
-.hero,.game,.select-area{
-grid-template-columns:1fr;
-}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juego RRHH - Riesgos Psicosociales</title>
+
+  <style>
+    :root {
+      --sw-blue: #003b7a;
+      --sw-blue-2: #0057b8;
+      --sw-red: #e31b23;
+      --sw-green: #21a038;
+      --sw-yellow: #ffd24a;
+      --sw-dark: #08204a;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(0,87,184,.20) 0, transparent 32%),
+        radial-gradient(circle at top right, rgba(227,27,35,.16) 0, transparent 30%),
+        radial-gradient(circle at bottom left, rgba(33,160,56,.16) 0, transparent 30%),
+        linear-gradient(135deg, #f7fbff, #ffffff);
+      color: #111827;
+    }
+
+    .app {
+      width: min(1220px, 96%);
+      margin: 18px auto;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid #dbeafe;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 59, 122, 0.22);
+      overflow: hidden;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 240px 1fr 250px;
+      gap: 16px;
+      align-items: center;
+      padding: 20px 26px;
+      background: linear-gradient(90deg, #ffffff, #eef6ff);
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: var(--sw-blue);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .brand-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--sw-blue), var(--sw-blue-2));
+      color: white;
+      font-size: 31px;
+      box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+    }
+
+    .brand small {
+      display: block;
+      font-size: 11px;
+      letter-spacing: .5px;
+    }
+
+    .brand span {
+      font-size: 25px;
+      display: block;
+    }
+
+    .title h1 {
+      margin: 0;
+      color: var(--sw-blue);
+      font-size: clamp(26px, 4vw, 39px);
+      letter-spacing: -1px;
+    }
+
+    .title p {
+      margin: 6px 0 0;
+      color: #4b5563;
+      font-size: 16px;
+    }
+
+    .top-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pill-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+    }
+
+    .pill-card .icon {
+      font-size: 25px;
+    }
+
+    .pill-card strong {
+      display: block;
+      font-size: 29px;
+      color: var(--sw-red);
+      margin-top: 2px;
+    }
+
+    .pill-card span {
+      font-size: 12px;
+      font-weight: 900;
+      color: #172554;
+      text-transform: uppercase;
+    }
+
+    main {
+      padding: 24px;
+    }
+
+    .setup-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .step-card {
+      position: relative;
+      background: linear-gradient(135deg, #f7f3ff, #ffffff);
+      border: 2px solid #c4b5fd;
+      border-radius: 22px;
+      padding: 24px;
+      min-height: 145px;
+      overflow: hidden;
+    }
+
+    .step-card.pink {
+      background: linear-gradient(135deg, #fff1f6, #ffffff);
+      border-color: #f9a8d4;
+    }
+
+    .step-number {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--sw-blue), var(--sw-blue-2));
+      color: white;
+      border-radius: 14px;
+      font-size: 26px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(67,56,202,.28);
+    }
+
+    .step-card.pink .step-number {
+      background: linear-gradient(135deg, var(--sw-red), #ff5a5f);
+    }
+
+    .step-content {
+      padding-left: 66px;
+    }
+
+    .step-content h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #312e81;
+      text-transform: uppercase;
+    }
+
+    .step-card.pink h2 {
+      color: #be185d;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1px solid #d1d5db;
+      border-radius: 16px;
+      background: white;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 8px 18px rgba(0,0,0,.06);
+    }
+
+    select:focus, input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    .generate-btn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--sw-red), #ff5a5f);
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 26px rgba(227,27,35,.28);
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .generate-btn:hover,
+    .action-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(.98);
+    }
+
+    .mascot-hero {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 18px;
+      align-items: center;
+      background: linear-gradient(135deg, #eaf4ff, #ffffff 55%, #fff5f5);
+      border: 2px solid #bfdbfe;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mascot-hero::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      bottom: -70px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: rgba(33,160,56,.13);
+    }
+
+    .mascot-card {
+      background: white;
+      border-radius: 24px;
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 14px 35px rgba(0,59,122,.18);
+      border: 1px solid #dbeafe;
+      overflow: hidden;
+    }
+
+    .mascot-card img {
+      width: 100%;
+      height: 210px;
+      object-fit: contain;
+      padding: 6px;
+    }
+
+    .fallback-mascot {
+      display: none;
+      width: 100%;
+      height: 210px;
+      place-items: center;
+      font-size: 120px;
+      background: linear-gradient(135deg, #dcfce7, #eff6ff);
+    }
+
+    .speech {
+      position: relative;
+      z-index: 1;
+    }
+
+    .speech h2 {
+      margin: 0 0 8px;
+      font-size: clamp(25px, 4vw, 40px);
+      color: var(--sw-blue);
+    }
+
+    .speech p {
+      margin: 0 0 12px;
+      color: #374151;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .speech strong {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--sw-blue), var(--sw-blue-2));
+      color: white;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      letter-spacing: .3px;
+    }
+
+    .info-strip {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 12px;
+      align-items: center;
+      background: linear-gradient(90deg, #eff6ff, #f8fbff);
+      border: 1px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 28px;
+    }
+
+    .info-strip p {
+      margin: 4px 0 0;
+      color: #374151;
+    }
+
+    .time-box {
+      text-align: center;
+      background: white;
+      border-radius: 16px;
+      padding: 12px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(0,0,0,.08);
+      color: #0f172a;
+    }
+
+    .time-box span {
+      display: block;
+      color: #16a34a;
+      font-size: 24px;
+    }
+
+    .game-title {
+      text-align: center;
+      color: #172554;
+      font-size: 21px;
+      font-weight: 900;
+      margin: 18px 0 22px;
+      letter-spacing: .4px;
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: 135px 1fr 1fr 135px;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .character {
+      min-height: 265px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 105px;
+      filter: drop-shadow(0 12px 18px rgba(0,59,122,.18));
+    }
+
+    .mascot-side img {
+      width: 135px;
+      max-height: 260px;
+      object-fit: contain;
+      animation: floatMascot 3s ease-in-out infinite;
+    }
+
+    .mascot-side.small img {
+      transform: scaleX(-1);
+    }
+
+    @keyframes floatMascot {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .mascot-side.small img {
+      animation: floatMascotRight 3s ease-in-out infinite;
+    }
+
+    @keyframes floatMascotRight {
+      0%, 100% { transform: scaleX(-1) translateY(0); }
+      50% { transform: scaleX(-1) translateY(-10px); }
+    }
+
+    .zone {
+      background: #fff;
+      border-radius: 22px;
+      padding: 26px;
+      min-height: 310px;
+      border: 2px solid #e5e7eb;
+      position: relative;
+      transition: .2s ease;
+    }
+
+    .zone.bad {
+      background: linear-gradient(135deg, #fff1f2, #ffffff);
+      border-color: #fda4af;
+    }
+
+    .zone.good {
+      background: linear-gradient(135deg, #f0fdf4, #ffffff);
+      border-color: #86efac;
+    }
+
+    .zone.drag-over {
+      transform: scale(1.01);
+      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+    }
+
+    .zone-head {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .zone-icon {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    .bad .zone-icon {
+      color: #be123c;
+      background: #ffe4e6;
+      border: 2px solid #fb7185;
+    }
+
+    .good .zone-icon {
+      color: #15803d;
+      background: #dcfce7;
+      border: 2px solid #4ade80;
+    }
+
+    .zone h2 {
+      margin: 0;
+      font-size: 18px;
+      text-transform: uppercase;
+    }
+
+    .bad h2 { color: #be123c; }
+    .good h2 { color: #15803d; }
+
+    .zone h3 {
+      margin: 4px 0 10px;
+      font-size: 29px;
+    }
+
+    .zone small {
+      display: block;
+      color: #374151;
+      line-height: 1.45;
+    }
+
+    .drop-hint {
+      border: 2px dashed rgba(0,0,0,.15);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      color: #6b7280;
+      font-weight: 700;
+      margin-top: 14px;
+    }
+
+    .bank {
+      margin-top: 28px;
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 22px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 12px 35px rgba(0,0,0,.08);
+    }
+
+    .bank h2 {
+      margin: 0;
+      text-align: center;
+      color: #111827;
+      text-transform: uppercase;
+      font-size: 22px;
+    }
+
+    .bank p {
+      text-align: center;
+      margin: 6px 0 18px;
+      color: #4b5563;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 15px 15px 15px 42px;
+      min-height: 72px;
+      cursor: grab;
+      position: relative;
+      line-height: 1.35;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(0,0,0,.07);
+      transition: .18s ease;
+    }
+
+    .card::before {
+      content: '⠿';
+      position: absolute;
+      left: 15px;
+      top: 18px;
+      color: #94a3b8;
+      font-size: 22px;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(30,64,175,.13);
+    }
+
+    .card.dragging {
+      opacity: .45;
+    }
+
+    .card.correct {
+      border-color: #22c55e;
+      background: #f0fdf4;
+    }
+
+    .card.incorrect {
+      border-color: #ef4444;
+      background: #fff1f2;
+    }
+
+    .feedback {
+      margin-top: 9px;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 28px 0 22px;
+    }
+
+    .action-btn {
+      min-width: 230px;
+      border: 0;
+      border-radius: 16px;
+      padding: 17px 22px;
+      color: white;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+
+    .blue { background: linear-gradient(135deg, var(--sw-blue), var(--sw-blue-2)); }
+    .orange { background: linear-gradient(135deg, var(--sw-yellow), #f59e0b); color: #08204a; }
+    .gray { background: linear-gradient(135deg, #64748b, #334155); }
+
+    .result {
+      display: none;
+      margin-top: 16px;
+      padding: 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      border: 1px solid #bfdbfe;
+      line-height: 1.55;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .tips {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .tip {
+      border-radius: 18px;
+      padding: 20px;
+      min-height: 140px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 9px 24px rgba(0,0,0,.06);
+    }
+
+    .tip.yellow { background: linear-gradient(135deg, #fffbeb, #ffffff); }
+    .tip.green { background: linear-gradient(135deg, #ecfdf5, #ffffff); }
+    .tip.purple { background: linear-gradient(135deg, #f5f3ff, #ffffff); }
+
+    .tip h3 {
+      margin: 0 0 10px;
+      color: #172554;
+    }
+
+    .tip p {
+      margin: 0;
+      color: #374151;
+      line-height: 1.45;
+    }
+
+    footer {
+      background: linear-gradient(90deg, var(--sw-blue), var(--sw-blue-2));
+      color: white;
+      padding: 18px 26px;
+      font-weight: 900;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      header,
+      .setup-panel,
+      .mascot-hero,
+      .info-strip,
+      .tips {
+        grid-template-columns: 1fr;
+      }
+
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .character {
+        display: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🎨</div>
+        <div>
+          <small>SHERWIN WILLIAMS</small>
+          <span>RECURSOS</span>
+          <span>HUMANOS</span>
+        </div>
+      </div>
 
-<header>
-<h1>SHERWIN WILLIAMS</h1>
-<p>Departamento de Recursos Humanos</p>
-</header>
+      <div class="title">
+        <h1>Juego Sherwin Williams: ¿Riesgo laboral o gajes del oficio?</h1>
+        <p>Aprende a diferenciar señales reales de riesgo psicosocial frente a situaciones normales del trabajo.</p>
+      </div>
 
-<div class="container">
+      <div class="top-stats">
+        <div class="pill-card">
+          <div class="icon">🏆</div>
+          <span>Puntos</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="pill-card">
+          <div class="icon">❓</div>
+          <span>Aciertos</span>
+          <strong id="hits">0</strong>
+        </div>
+      </div>
+    </header>
 
-<div class="hero">
-<img src="mascota.png" alt="Mascota">
-<div>
-<h2>Juego de Riesgos Psicosociales</h2>
-<p>Clasifica las situaciones entre riesgos reales y situaciones normales del trabajo.</p>
-</div>
-</div>
+    <main>
+      <section class="setup-panel">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h2>Elige un riesgo del Excel</h2>
+            <select id="topicSelect" onchange="syncTopic()">
+              <option value="Liderazgo">Liderazgo</option>
+              <option value="Carga y ritmo">Carga y ritmo</option>
+              <option value="Acoso laboral">Acoso laboral</option>
+              <option value="Doble presencia">Doble presencia</option>
+            </select>
+          </div>
+        </div>
 
-<div class="select-area">
-<select id="tema">
-<option>Acoso laboral</option>
-<option>Estrés laboral</option>
-<option>Burnout</option>
-<option>Liderazgo tóxico</option>
-<option>Comunicación efectiva</option>
-</select>
+        <div class="step-card pink">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h2>Carga opciones del Excel</h2>
+            <input id="customTopic" type="text" placeholder="Opcional: escribe otro tema" />
+            <button class="generate-btn" onclick="generateOptions()">✨ Cargar opciones</button>
+          </div>
+        </div>
+      </section>
 
-<button onclick="generar()">Generar opciones</button>
-</div>
+      <section class="mascot-hero">
+        <div class="mascot-card">
+          <img src="mascota.png" alt="Mascota Sherwin Williams" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" />
+          <div class="fallback-mascot">🦎</div>
+        </div>
+        <div class="speech">
+          <h2>¡Hola! Soy tu guía de seguridad y bienestar.</h2>
+          <p>Elige un riesgo del Excel, clasifica las situaciones y aprende a diferenciar riesgos reales de gajes del oficio.</p>
+          <strong>SHERWIN WILLIAMS · Departamento de Recursos Humanos</strong>
+        </div>
+      </section>
 
-<div class="game">
-<div class="zone risk" id="riesgo">
-<h2>⚠️ Riesgo laboral</h2>
-</div>
+      <section class="info-strip">
+        <div>
+          <strong>ℹ️ Instrucciones:</strong>
+          <p>Lee cada situación y arrástrala a la columna correcta. Luego revisa tus respuestas o deja que el sistema las ordene.</p>
+        </div>
+        <div class="time-box">
+          ⏱️ TIEMPO
+          <span id="timer">00:00</span>
+        </div>
+      </section>
 
-<div class="zone normal" id="normal">
-<h2>✅ Gajes del oficio</h2>
-</div>
-</div>
+      <div class="game-title">ARRASTRA CADA SITUACIÓN A SU CATEGORÍA</div>
 
-<div class="cards" id="cards"></div>
+      <section class="game-layout">
+        <div class="character mascot-side"><img src="mascota.png" alt="Mascota Sherwin Williams" onerror="this.replaceWith(document.createTextNode('🤔'))"></div>
 
-</div>
+        <div class="zone bad drop-zone" id="riskZone" data-category="riesgo">
+          <div class="zone-head">
+            <div class="zone-icon">⚠️</div>
+            <h2>Sí puede ser</h2>
+            <h3>Riesgo laboral</h3>
+            <small>Situaciones marcadas en el Excel como riesgo psicosocial.</small>
+          </div>
+          <div class="drop-hint">Arrastra las situaciones aquí</div>
+        </div>
 
-<footer>
-Sherwin Williams · Recursos Humanos
-</footer>
+        <div class="zone good drop-zone" id="normalZone" data-category="normal">
+          <div class="zone-head">
+            <div class="zone-icon">✓</div>
+            <h2>Gajes del oficio</h2>
+            <h3>No es riesgo directo</h3>
+            <small>Situaciones marcadas en el Excel como no riesgo o gajes del oficio.</small>
+          </div>
+          <div class="drop-hint">Arrastra las situaciones aquí</div>
+        </div>
 
-<script>
+        <div class="character mascot-side small"><img src="mascota.png" alt="Mascota Sherwin Williams" onerror="this.replaceWith(document.createTextNode('😊'))"></div>
+      </section>
 
-const datos={
-"Acoso laboral":[
-["Tu jefe te humilla frente al equipo.","riesgo"],
-["Te piden corregir un informe.","normal"],
-["Difunden rumores falsos sobre ti.","riesgo"],
-["Te solicitan entregar una tarea urgente.","normal"]
-],
+      <section class="bank">
+        <h2>Situaciones disponibles</h2>
+        <p>Estas opciones se cargan desde el Excel de riesgos psicosociales.</p>
+        <div class="cards drop-zone" id="cardBank"></div>
+      </section>
 
-"Estrés laboral":[
-["No tienes pausas ni descanso.","riesgo"],
-["Hay una semana con alta carga operativa.","normal"],
-["La presión es constante y afecta tu salud.","riesgo"],
-["Se reorganizan tareas por una auditoría.","normal"]
-],
+      <section class="actions">
+        <button class="action-btn blue" onclick="checkAnswers()">🔍 Revisar respuestas</button>
+        <button class="action-btn orange" onclick="sortCorrectly()">✨ Ordenar correctamente</button>
+        <button class="action-btn gray" onclick="resetCurrent()">🔄 Limpiar todo</button>
+      </section>
 
-"Burnout":[
-["Trabajas jornadas excesivas todos los días.","riesgo"],
-["Hay cansancio después de una semana intensa.","normal"],
-["Pierdes motivación por agotamiento continuo.","riesgo"],
-["Te asignan una tarea retadora.","normal"]
-],
+      <section class="result" id="resultBox"></section>
 
-"Liderazgo tóxico":[
-["Tu líder amenaza constantemente.","riesgo"],
-["Tu líder da seguimiento a indicadores.","normal"],
-["Se ridiculiza públicamente al personal.","riesgo"],
-["Se corrige una conducta insegura.","normal"]
-],
+      <section class="tips">
+        <div class="tip yellow">
+          <h3>💡 ¿Sabías que?</h3>
+          <p>Un riesgo psicosocial no siempre nace de una sola acción. Muchas veces aparece por repetición, intensidad, falta de control o ausencia de apoyo.</p>
+        </div>
+        <div class="tip green">
+          <h3>🛡️ Recuerda</h3>
+          <p>Recursos Humanos debe promover ambientes seguros, respetuosos y con canales claros de comunicación.</p>
+        </div>
+        <div class="tip purple">
+          <h3>☎️ Recursos de apoyo</h3>
+          <p>Si una situación afecta tu bienestar, repórtala por los canales internos definidos por la empresa.</p>
+        </div>
+      </section>
+    </main>
 
-"Comunicación efectiva":[
-["Ocultan información para que falles.","riesgo"],
-["Te piden confirmar instrucciones.","normal"],
-["Usan insultos para comunicar errores.","riesgo"],
-["Se aclaran dudas en reuniones.","normal"]
-]
+    <footer>
+      <div>🎨 SHERWIN WILLIAMS · DEPARTAMENTO DE RECURSOS HUMANOS</div>
+      <div>Promovemos ambientes de trabajo saludables, seguros y respetuosos 💙</div>
+    </footer>
+  </div>
+
+  <script>
+    const baseData = {
+      "Liderazgo": {
+            "riesgo": [
+                  "El jefe evita dar retroalimentación negativa para no incomodar.",
+                  "El líder toma decisiones sin consultar al equipo para ganar tiempo.",
+                  "El jefe felicita solo a un colaborador constantemente ignorando al resto.",
+                  "El supervisor asigna tareas sin explicar objetivos."
+            ],
+            "normal": [
+                  "El gerente reconoce públicamente el esfuerzo del equipo.",
+                  "El lider recuerda las actividades a realizar en la semana y se brinda acompañamiento"
+            ]
+      },
+      "Carga y ritmo": {
+            "riesgo": [
+                  "Un trabajador revisa correos en la noche por presión implícita.",
+                  "Se exige cumplir tareas urgentes simultáneamente todos los días."
+            ],
+            "normal": [
+                  "Se pide quedarse horas extra para cumplir metas.",
+                  "Se asignan tareas adicionales al personal en base a una medicion de tiempos.",
+                  "Existen pausas activas durante la jornada laboral.",
+                  "El supervisor controla el horario de ingreso y salida.",
+                  "El supervisor solicita que se cumpla con los programas establecidos.",
+                  "El supervisor me coloca en 1er turno cuando siempre he estado en el 2do"
+            ]
+      },
+      "Acoso laboral": {
+            "riesgo": [
+                  "Un compañero hace bromas constantes sobre otro frente al equipo.",
+                  "Se excluye a ciertos trabajadores de reuniones",
+                  "Se ignoran repetidamente las opiniones de una persona.",
+                  "Tengo una urgencia medica personal y mi jefe me solicita quedarme laborando"
+            ],
+            "normal": [
+                  "Un colaborador recibe retroalimentación sobre procesos",
+                  "Un supervisor brinda retroalimentacion de manera seguida",
+                  "El supervisor controla el horario de ingreso y salida.",
+                  "El lider realiza seguimiento de avances del trabajo diario del personal",
+                  "Mis compañeros siempre estan pendientes que utilice correctamnete los EPP"
+            ]
+      },
+      "Doble presencia": {
+            "riesgo": [
+                  "Mi jefe no me permite asistir a citas medicas",
+                  "Se exige disponibilidad fuera del horario laboral."
+            ],
+            "normal": [
+                  "Empresa establece horarios en turnos rotativos",
+                  "Debo reportar si tengo que asusentarme por una cita medica",
+                  "La empresa respeta los tiempos personales.",
+                  "Mi supervisor me solicita certificado medico por una cita medica que acudí",
+                  "Cargo un dia de vacaciones para realizar tramites personales",
+                  "Cargo un dia de vacaciones para asistir a un evento familiar"
+            ]
+      }
 };
 
-let dragged=null;
+    const genericTemplates = {
+      riesgo: [
+        "Se presentan señales repetidas relacionadas con TEMA y la empresa no toma acciones preventivas.",
+        "La situación de TEMA afecta el bienestar emocional o físico de la persona de forma constante.",
+        "El trabajador reporta consecuencias asociadas a TEMA, pero no recibe apoyo ni seguimiento.",
+        "La condición vinculada a TEMA se normaliza aunque genera malestar, errores o deterioro del desempeño."
+      ],
+      normal: [
+        "Existe una exigencia relacionada con TEMA, pero es razonable, temporal y comunicada con respeto.",
+        "Se realiza seguimiento sobre TEMA con criterios claros y sin humillación ni amenazas.",
+        "La empresa pide ajustar conductas o tiempos de trabajo por una necesidad operativa justificada.",
+        "Se solicita cumplir una actividad vinculada a TEMA dentro de las funciones normales del cargo."
+      ]
+    };
 
-function generar(){
-const tema=document.getElementById("tema").value;
-const area=document.getElementById("cards");
-area.innerHTML="";
+    const cardBank = document.getElementById("cardBank");
+    const riskZone = document.getElementById("riskZone");
+    const normalZone = document.getElementById("normalZone");
+    const resultBox = document.getElementById("resultBox");
+    const scoreEl = document.getElementById("score");
+    const hitsEl = document.getElementById("hits");
+    const timerEl = document.getElementById("timer");
 
-datos[tema].forEach((item,index)=>{
-const card=document.createElement("div");
-card.className="card";
-card.draggable=true;
-card.innerText=item[0];
-card.dataset.tipo=item[1];
+    let draggedCard = null;
+    let currentCards = [];
+    let seconds = 0;
+    let timerInterval = null;
 
-card.addEventListener("dragstart",()=>{
-dragged=card;
-});
+    function syncTopic() {
+      document.getElementById("customTopic").value = document.getElementById("topicSelect").value;
+    }
 
-area.appendChild(card);
-});
-}
+    function startTimer() {
+      clearInterval(timerInterval);
+      seconds = 0;
+      timerEl.textContent = "00:00";
+      timerInterval = setInterval(() => {
+        seconds++;
+        const min = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const sec = String(seconds % 60).padStart(2, "0");
+        timerEl.textContent = `${min}:${sec}`;
+      }, 1000);
+    }
 
-document.querySelectorAll(".zone").forEach(zone=>{
-zone.addEventListener("dragover",e=>{
-e.preventDefault();
-});
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
 
-zone.addEventListener("drop",()=>{
-if(dragged){
-zone.appendChild(dragged);
-}
-});
-});
+    function getTopic() {
+      const typed = document.getElementById("customTopic").value.trim();
+      return typed || document.getElementById("topicSelect").value;
+    }
 
-generar();
+    function buildCards(topic) {
+      let data = baseData[topic];
 
-</script>
+      if (!data) {
+        data = {
+          riesgo: genericTemplates.riesgo.map(text => text.replaceAll("TEMA", topic)),
+          normal: genericTemplates.normal.map(text => text.replaceAll("TEMA", topic))
+        };
+      }
 
+      const cards = [];
+      data.riesgo.forEach((text, index) => {
+        cards.push({
+          id: `r-${index}-${Date.now()}`,
+          text,
+          category: "riesgo",
+          explanation: "Puede ser riesgo laboral porque afecta el bienestar, la dignidad, la salud mental o la seguridad de la persona."
+        });
+      });
+
+      data.normal.forEach((text, index) => {
+        cards.push({
+          id: `n-${index}-${Date.now()}`,
+          text,
+          category: "normal",
+          explanation: "Se considera gaje del oficio si es una exigencia razonable, respetuosa, justificada y relacionada con el cargo."
+        });
+      });
+
+      return shuffle(cards);
+    }
+
+    function createCard(item, index) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.draggable = true;
+      card.id = item.id;
+      card.dataset.category = item.category;
+      card.dataset.explanation = item.explanation;
+      card.innerHTML = item.text;
+
+      card.addEventListener("dragstart", () => {
+        draggedCard = card;
+        card.classList.add("dragging");
+      });
+
+      card.addEventListener("dragend", () => {
+        draggedCard = null;
+        card.classList.remove("dragging");
+      });
+
+      return card;
+    }
+
+    function setupDropZones() {
+      document.querySelectorAll(".drop-zone").forEach(zone => {
+        zone.addEventListener("dragover", e => {
+          e.preventDefault();
+          zone.classList.add("drag-over");
+        });
+
+        zone.addEventListener("dragleave", () => {
+          zone.classList.remove("drag-over");
+        });
+
+        zone.addEventListener("drop", e => {
+          e.preventDefault();
+          zone.classList.remove("drag-over");
+          if (draggedCard) {
+            removeFeedback(draggedCard);
+            zone.appendChild(draggedCard);
+          }
+        });
+      });
+    }
+
+    function removeFeedback(card) {
+      card.classList.remove("correct", "incorrect");
+      const fb = card.querySelector(".feedback");
+      if (fb) fb.remove();
+    }
+
+    function clearZones() {
+      [...riskZone.querySelectorAll(".card")].forEach(card => cardBank.appendChild(card));
+      [...normalZone.querySelectorAll(".card")].forEach(card => cardBank.appendChild(card));
+    }
+
+    function generateOptions() {
+      const topic = getTopic();
+      currentCards = buildCards(topic);
+      cardBank.innerHTML = "";
+
+      clearZoneCardsOnly(riskZone);
+      clearZoneCardsOnly(normalZone);
+
+      currentCards.forEach((item, index) => {
+        cardBank.appendChild(createCard(item, index));
+      });
+
+      scoreEl.textContent = "0";
+      hitsEl.textContent = "0";
+      resultBox.classList.remove("show");
+      resultBox.innerHTML = "";
+      startTimer();
+    }
+
+    function clearZoneCardsOnly(zone) {
+      zone.querySelectorAll(".card").forEach(card => card.remove());
+    }
+
+    function checkAnswers() {
+      const cards = document.querySelectorAll(".card");
+      let correct = 0;
+      let incorrect = 0;
+      let pending = 0;
+
+      cards.forEach(card => {
+        removeFeedback(card);
+        const parentCategory = card.parentElement.dataset.category;
+        const realCategory = card.dataset.category;
+        const fb = document.createElement("div");
+        fb.className = "feedback";
+
+        if (!parentCategory) {
+          pending++;
+          fb.style.color = "#92400e";
+          fb.textContent = "Pendiente: todavía no clasificaste esta tarjeta.";
+          card.appendChild(fb);
+          return;
+        }
+
+        if (parentCategory === realCategory) {
+          correct++;
+          card.classList.add("correct");
+          fb.style.color = "#15803d";
+          fb.textContent = "Correcto. " + card.dataset.explanation;
+        } else {
+          incorrect++;
+          card.classList.add("incorrect");
+          fb.style.color = "#be123c";
+          fb.textContent = "Incorrecto. " + card.dataset.explanation;
+        }
+
+        card.appendChild(fb);
+      });
+
+      const points = correct * 15;
+      scoreEl.textContent = points;
+      hitsEl.textContent = correct;
+
+      resultBox.classList.add("show");
+      resultBox.innerHTML = `
+        <h2>Resultado del juego</h2>
+        <p><strong>Tema trabajado:</strong> ${getTopic()}</p>
+        <p><strong>Aciertos:</strong> ${correct} de ${cards.length}</p>
+        <p><strong>Por corregir o pendientes:</strong> ${incorrect + pending}</p>
+        <p><strong>Puntos obtenidos:</strong> ${points}</p>
+        <p><strong>Criterio clave:</strong> una situación se vuelve riesgo cuando afecta de forma relevante el bienestar, la salud, la dignidad, la seguridad o el desempeño de la persona. No todo malestar es acoso o riesgo directo; algunas exigencias son parte normal del cargo si son razonables, respetuosas y justificadas.</p>
+      `;
+    }
+
+    function sortCorrectly() {
+      const cards = document.querySelectorAll(".card");
+      cards.forEach(card => {
+        removeFeedback(card);
+        if (card.dataset.category === "riesgo") {
+          riskZone.appendChild(card);
+        } else {
+          normalZone.appendChild(card);
+        }
+        card.classList.add("correct");
+      });
+
+      const total = cards.length;
+      scoreEl.textContent = total * 15;
+      hitsEl.textContent = total;
+
+      resultBox.classList.add("show");
+      resultBox.innerHTML = `
+        <h2>Clasificación correcta</h2>
+        <p>El sistema ordenó las tarjetas según el criterio preventivo de Recursos Humanos.</p>
+        <p><strong>Riesgo laboral:</strong> situaciones que pueden afectar salud, dignidad, seguridad o bienestar.</p>
+        <p><strong>Gajes del oficio:</strong> situaciones normales del trabajo, siempre que sean razonables, respetuosas y justificadas.</p>
+      `;
+    }
+
+    function resetCurrent() {
+      document.querySelectorAll(".card").forEach(card => {
+        removeFeedback(card);
+        cardBank.appendChild(card);
+      });
+      scoreEl.textContent = "0";
+      hitsEl.textContent = "0";
+      resultBox.classList.remove("show");
+      resultBox.innerHTML = "";
+      startTimer();
+    }
+
+    setupDropZones();
+    syncTopic();
+    generateOptions();
+  </script>
 </body>
 </html>
